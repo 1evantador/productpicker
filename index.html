@@ -1,0 +1,2184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>STEM Product Finder</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #1a2b5e;
+        --teal: #2a9d9f;
+        --teal-light: #e8f7f7;
+        --green: #7ac143;
+        --green-light: #f0f9e6;
+        --orange: #f26522;
+        --purple: #6b3fa0;
+        --yellow: #f5c400;
+        --blue-mid: #4a90d9;
+        --gray-light: #f4f6fa;
+        --gray: #8a94a8;
+        --text: #1e2d4a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Nunito Sans", sans-serif;
+        background: transparent;
+        color: var(--text);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      /* PROGRESS */
+      .progress-wrap {
+        background: white;
+        border-bottom: 1px solid #e5e9f2;
+        border-radius: 14px 14px 0 0;
+        padding: 14px 32px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .progress-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      .progress-bar-bg {
+        flex: 1;
+        height: 8px;
+        background: #e5e9f2;
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--teal), var(--green));
+        border-radius: 99px;
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .progress-steps {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--teal);
+        white-space: nowrap;
+      }
+
+      /* MAIN */
+      .main {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 0 20px 40px;
+      }
+
+      /* QUESTION CARD */
+      .question-card {
+        background: white;
+        border-radius: 20px;
+        padding: 36px 36px 28px;
+        box-shadow: 0 4px 24px rgba(26, 43, 94, 0.08);
+        animation: slideIn 0.4s ease;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .question-step {
+        display: inline-flex;
+        align-items: center;
+        background: var(--teal-light);
+        color: var(--teal);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        margin-bottom: 16px;
+      }
+      .question-text {
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 22px;
+        color: var(--navy);
+        line-height: 1.3;
+        margin-bottom: 8px;
+      }
+      .question-sub {
+        color: var(--gray);
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+      .multi-hint {
+        display: inline-block;
+        background: #fff8e8;
+        color: #7a5800;
+        font-size: 12px;
+        font-weight: 700;
+        border: 1px solid #f0d080;
+        border-radius: 8px;
+        padding: 4px 10px;
+        margin-bottom: 16px;
+      }
+
+      /* OPTIONS */
+      .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .options.single-col {
+        grid-template-columns: 1fr;
+      }
+
+      .option-btn {
+        background: var(--gray-light);
+        border: 2px solid transparent;
+        border-radius: 14px;
+        padding: 14px 44px 14px 18px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s ease;
+        position: relative;
+        width: 100%;
+      }
+      .option-btn:hover {
+        border-color: var(--teal);
+        background: var(--teal-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(42, 157, 159, 0.15);
+      }
+      .option-btn.selected {
+        border-color: var(--teal);
+        background: var(--teal-light);
+        box-shadow: 0 0 0 3px rgba(42, 157, 159, 0.15);
+      }
+
+      /* checkbox indicator */
+      .option-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        transform: translateY(-50%);
+        width: 18px;
+        height: 18px;
+        border-radius: 4px;
+        border: 2px solid #c8d0e0;
+        background: white;
+        transition: all 0.15s;
+      }
+      .option-btn.selected::after {
+        background: var(--teal);
+        border-color: var(--teal);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1 5l3.5 3.5L11 1' stroke='white' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 11px;
+      }
+      /* radio style for single */
+      .options.single-select .option-btn::after {
+        border-radius: 50%;
+      }
+      .options.single-select .option-btn.selected::after {
+        background: white;
+        border-color: var(--teal);
+        border-width: 5px;
+        background-image: none;
+        box-shadow: inset 0 0 0 2px var(--teal);
+      }
+
+      .option-title {
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 14px;
+        color: var(--navy);
+        margin-bottom: 2px;
+      }
+      .option-desc {
+        font-size: 12px;
+        color: var(--gray);
+        line-height: 1.4;
+      }
+
+      /* NAV */
+      .nav-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .btn-back {
+        background: none;
+        border: 2px solid #e5e9f2;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--gray);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-back:hover {
+        border-color: var(--navy);
+        color: var(--navy);
+      }
+      .btn-back:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .btn-next {
+        background: linear-gradient(135deg, var(--teal), #1e8587);
+        border: none;
+        border-radius: 12px;
+        padding: 13px 28px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 15px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(42, 157, 159, 0.35);
+      }
+      .btn-next:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(42, 157, 159, 0.45);
+      }
+      .btn-next:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* RESULTS */
+      .results-header {
+        text-align: center;
+        margin-bottom: 28px;
+        animation: slideIn 0.4s ease;
+      }
+      .results-badge {
+        display: inline-flex;
+        align-items: center;
+        background: var(--green-light);
+        color: var(--green);
+        font-weight: 800;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 6px 16px;
+        border-radius: 99px;
+        margin-bottom: 14px;
+      }
+      .results-header h2 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 28px;
+        color: var(--navy);
+        margin-bottom: 8px;
+      }
+      .results-header p {
+        color: var(--gray);
+        font-size: 15px;
+      }
+
+      .result-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(26, 43, 94, 0.08);
+        margin-bottom: 16px;
+        animation: slideIn 0.4s ease;
+        border: 2px solid transparent;
+        transition: all 0.2s;
+      }
+      .result-card:hover {
+        border-color: var(--teal);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px rgba(26, 43, 94, 0.12);
+      }
+      .result-card.top-pick {
+        border-color: var(--green);
+      }
+
+      .result-card-header {
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid #f0f2f7;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .result-brand {
+        display: inline-flex;
+        align-items: center;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 3px 10px;
+        border-radius: 99px;
+        margin-bottom: 8px;
+      }
+      .brand-birdbrain {
+        background: #e8f7f9;
+        color: var(--teal);
+      }
+      .brand-strawbees {
+        background: #e8f0fb;
+        color: var(--blue-mid);
+      }
+      .brand-datasnap {
+        background: #ede8f7;
+        color: var(--purple);
+      }
+      .brand-tinkering {
+        background: #fef0e8;
+        color: var(--orange);
+      }
+      .brand-owlet {
+        background: #fff8e0;
+        color: #b38600;
+      }
+      .brand-swift {
+        background: #fde8e8;
+        color: #c0392b;
+      }
+      .result-name {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 19px;
+        color: var(--navy);
+        margin-bottom: 4px;
+      }
+      .result-tagline {
+        color: var(--gray);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .top-pick-badge {
+        background: var(--green);
+        color: white;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 4px 12px;
+        border-radius: 99px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .result-card-body {
+        padding: 18px 24px;
+      }
+      .result-why {
+        background: var(--green-light);
+        border-left: 3px solid var(--green);
+        border-radius: 0 10px 10px 0;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: #3d6b1c;
+        line-height: 1.5;
+        margin-bottom: 14px;
+      }
+      .result-why strong {
+        color: #2d5214;
+      }
+
+      .packages-label {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--gray);
+        margin-bottom: 8px;
+      }
+      .packages-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .pkg-chip {
+        background: var(--gray-light);
+        border: 1px solid #e5e9f2;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        text-decoration: none;
+        display: block;
+        transition: all 0.15s;
+      }
+      a.pkg-chip:hover {
+        border-color: var(--teal);
+        background: var(--teal-light);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(42, 157, 159, 0.15);
+      }
+      .pkg-name {
+        font-weight: 700;
+        color: var(--navy);
+      }
+      .pkg-price {
+        color: var(--teal);
+        font-weight: 800;
+      }
+      .pkg-students {
+        color: var(--gray);
+        font-size: 11px;
+        margin-top: 1px;
+      }
+      .pkg-sku {
+        color: #b0b8c8;
+        font-size: 10px;
+        margin-top: 2px;
+        font-family: monospace;
+      }
+
+      /* FEATURED PACKAGE */
+      .featured-pkg-label,
+      .other-pkgs-label {
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+      .featured-pkg-label {
+        color: var(--teal);
+      }
+      .other-pkgs-label {
+        color: var(--gray);
+        margin-top: 16px;
+      }
+
+      .featured-pkg {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--teal-light);
+        border: 2px solid var(--teal);
+        border-radius: 14px;
+        padding: 18px 22px;
+        text-decoration: none;
+        transition: all 0.2s;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      a.featured-pkg:hover {
+        background: #d0ecec;
+        box-shadow: 0 4px 18px rgba(42, 157, 159, 0.22);
+        transform: translateY(-1px);
+      }
+      .featured-pkg-info {
+        flex: 1;
+        min-width: 130px;
+      }
+      .featured-pkg-name {
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 17px;
+        color: var(--navy);
+        margin-bottom: 4px;
+      }
+      .featured-pkg-students {
+        font-size: 13px;
+        color: var(--gray);
+        margin-bottom: 3px;
+      }
+      .featured-pkg-sku {
+        font-size: 11px;
+        color: #a0aab8;
+        font-family: monospace;
+      }
+      .featured-pkg-right {
+        flex-shrink: 0;
+        text-align: right;
+      }
+      .featured-pkg-price {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 28px;
+        color: var(--teal);
+        line-height: 1;
+        margin-bottom: 5px;
+      }
+      .featured-pkg-cta {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--teal);
+        opacity: 0.8;
+      }
+
+      /* OTHER PACKAGES */
+      .other-pkgs {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .other-pkg-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--gray-light);
+        border: 1px solid #e5e9f2;
+        border-radius: 10px;
+        padding: 10px 14px;
+        text-decoration: none;
+        transition: all 0.15s;
+        flex-wrap: wrap;
+      }
+      a.other-pkg-item:hover {
+        border-color: var(--teal);
+        background: var(--teal-light);
+      }
+      .other-pkg-name {
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--navy);
+        flex: 1;
+        min-width: 80px;
+      }
+      .other-pkg-price {
+        font-weight: 800;
+        font-size: 13px;
+        color: var(--teal);
+        white-space: nowrap;
+      }
+      .other-pkg-students {
+        font-size: 12px;
+        color: var(--gray);
+        white-space: nowrap;
+      }
+      .other-pkg-sku {
+        font-size: 11px;
+        color: #b0b8c8;
+        font-family: monospace;
+        white-space: nowrap;
+      }
+
+      /* PRODUCT IMAGE PLACEHOLDER */
+      .result-img-placeholder {
+        width: 100%;
+        height: 160px;
+        background: linear-gradient(160deg, #edf0f7 0%, #e4eaf4 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border-bottom: 1px solid #e5e9f2;
+      }
+      .result-img-placeholder svg {
+        width: 32px;
+        height: 32px;
+        color: #c0c8d8;
+      }
+      .result-img-placeholder span {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #c0c8d8;
+      }
+
+      /* PRODUCT LOGO PLACEHOLDER */
+      .result-logo-placeholder {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        background: var(--gray-light);
+        border: 1px dashed #c8d0e0;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .result-logo-placeholder svg {
+        width: 18px;
+        height: 18px;
+        color: #c8d0e0;
+      }
+      .result-header-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      /* FOOTER */
+      .result-card-footer {
+        padding: 14px 24px;
+        background: var(--gray-light);
+        display: flex;
+        gap: 10px;
+      }
+      .cta-link {
+        flex: 1;
+        background: var(--navy);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 11px 16px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 13px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s;
+        text-align: center;
+      }
+      .cta-link:hover {
+        background: var(--teal);
+      }
+      .cta-link.cta-quote {
+        background: var(--green);
+      }
+      .cta-link.cta-quote:hover {
+        background: #5fa832;
+      }
+
+      /* CONTACT FORM */
+      .contact-card {
+        background: white;
+        border-radius: 20px;
+        padding: 32px 36px;
+        box-shadow: 0 4px 24px rgba(26, 43, 94, 0.08);
+        margin-top: 28px;
+        animation: slideIn 0.4s ease;
+        border-top: 4px solid var(--navy);
+      }
+      .contact-card h3 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 20px;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .contact-card p {
+        color: var(--gray);
+        font-size: 14px;
+        margin-bottom: 24px;
+        line-height: 1.5;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .form-row.full {
+        grid-template-columns: 1fr;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .form-group label {
+        font-size: 12px;
+        font-weight: 800;
+        color: var(--navy);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        border: 2px solid #e5e9f2;
+        border-radius: 10px;
+        padding: 11px 14px;
+        font-family: "Nunito Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text);
+        background: white;
+        transition: border-color 0.2s;
+        outline: none;
+        width: 100%;
+      }
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(42, 157, 159, 0.1);
+      }
+      .form-group textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+      .form-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a94a8' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+        cursor: pointer;
+      }
+
+      .btn-submit {
+        background: linear-gradient(135deg, var(--navy), #2a3f7e);
+        border: none;
+        border-radius: 12px;
+        padding: 14px 32px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 800;
+        font-size: 15px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(26, 43, 94, 0.25);
+        margin-top: 8px;
+      }
+      .btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(26, 43, 94, 0.35);
+        background: linear-gradient(135deg, var(--teal), #1e8587);
+      }
+
+      .form-success {
+        background: var(--green-light);
+        border: 2px solid var(--green);
+        border-radius: 14px;
+        padding: 24px;
+        text-align: center;
+      }
+      .form-success h4 {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 18px;
+        color: #2d5214;
+        margin-bottom: 6px;
+      }
+      .form-success p {
+        color: #3d6b1c;
+        font-size: 14px;
+      }
+
+      /* RESTART */
+      .restart-wrap {
+        text-align: center;
+        margin-top: 28px;
+      }
+      .btn-restart {
+        background: none;
+        border: 2px solid #e5e9f2;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--gray);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-restart:hover {
+        border-color: var(--navy);
+        color: var(--navy);
+      }
+
+      @media (max-width: 560px) {
+        .options,
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+        .question-card,
+        .contact-card {
+          padding: 24px 20px 20px;
+        }
+        .result-card-header {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .result-card-body,
+        .result-card-footer {
+          padding: 14px 16px;
+        }
+        .result-card-header {
+          padding: 16px 16px 14px;
+        }
+        .featured-pkg {
+          padding: 14px 16px;
+        }
+        .featured-pkg-price {
+          font-size: 22px;
+        }
+        .featured-pkg-right {
+          text-align: left;
+        }
+        .other-pkg-sku {
+          display: none;
+        }
+        .result-card-footer {
+          flex-direction: column;
+        }
+        .main {
+          padding: 24px 12px 48px;
+        }
+        body {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 400px) {
+        .other-pkg-students {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="progress-wrap" id="progressWrap" style="display: none">
+      <div class="progress-label">Progress</div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-steps" id="progressSteps"></div>
+    </div>
+
+    <div class="main" id="mainContent"></div>
+
+    <script>
+      // ─── QUESTIONS ───────────────────────────────────────────────────────────────
+      const questions = [
+        {
+          id: "grade",
+          step: "Step 1 of 5",
+          multi: true,
+          text: "What grade level(s) are you teaching?",
+          sub: "Select all that apply.",
+          options: [
+            {
+              value: "K2",
+              title: "K–2",
+              desc: "Kindergarten through 2nd grade",
+            },
+            { value: "35", title: "3–5", desc: "3rd through 5th grade" },
+            { value: "68", title: "6–8", desc: "Middle school" },
+            { value: "912", title: "9–12+", desc: "High school and beyond" },
+          ],
+        },
+        {
+          id: "goal",
+          step: "Step 2 of 5",
+          multi: true,
+          text: "What are your curriculum goals?",
+          sub: "Select all that apply.",
+          options: [
+            {
+              value: "coding",
+              title: "Coding & Programming",
+              desc: "Block, text, or visual coding languages",
+            },
+            {
+              value: "robotics",
+              title: "Robotics",
+              desc: "Program and control physical robots",
+            },
+            {
+              value: "engineering",
+              title: "Engineering & Building",
+              desc: "Design, build, and problem-solve",
+            },
+            {
+              value: "data",
+              title: "Data Analysis & Science",
+              desc: "Experiments, sensors, real-world data",
+            },
+            {
+              value: "math",
+              title: "Math Concepts",
+              desc: "Hands-on math manipulatives",
+            },
+          ],
+        },
+        {
+          id: "classSize",
+          step: "Step 3 of 5",
+          multi: false,
+          text: "How many students are in your class?",
+          sub: "Choose one.",
+          options: [
+            {
+              value: "small",
+              title: "Under 10",
+              desc: "Small group or enrichment class",
+            },
+            {
+              value: "medium",
+              title: "10–20",
+              desc: "Standard class, partial set",
+            },
+            { value: "large", title: "20–30", desc: "Full classroom set" },
+            {
+              value: "district",
+              title: "30+",
+              desc: "Multiple classes or district-wide",
+            },
+          ],
+        },
+        {
+          id: "priorities",
+          step: "Step 4 of 5",
+          multi: true,
+          text: "What matters most to you in a classroom product?",
+          sub: "Select all that apply.",
+          options: [
+            {
+              value: "curriculum",
+              title: "Curriculum included",
+              desc: "Lesson plans ready to go, minimal prep",
+            },
+            {
+              value: "screen_free",
+              title: "Screen-free or low-tech",
+              desc: "No devices required",
+            },
+            {
+              value: "coding_focus",
+              title: "Coding & programming",
+              desc: "Text, block, or visual coding languages",
+            },
+            {
+              value: "device_compat",
+              title: "Works with existing devices",
+              desc: "Chromebook, iPad, laptop friendly",
+            },
+            {
+              value: "scalable",
+              title: "Scalable for multiple classes",
+              desc: "Easy to grow or share across rooms",
+            },
+            {
+              value: "real_data",
+              title: "Real-world data collection",
+              desc: "Sensors, measurement, analysis",
+            },
+            {
+              value: "beginner",
+              title: "Easy for beginners",
+              desc: "Simple setup, low barrier to entry",
+            },
+            {
+              value: "open_ended",
+              title: "Open-ended projects",
+              desc: "Student creativity and invention",
+            },
+            {
+              value: "hands_on",
+              title: "Hands-on learning",
+              desc: "Physical, tactile building and making",
+            },
+            {
+              value: "cross_curricular",
+              title: "Flexible across subjects",
+              desc: "Fits multiple disciplines - science, math, ELA, and more",
+            },
+          ],
+        },
+        {
+          id: "budget",
+          step: "Step 5 of 5",
+          multi: false,
+          text: "What's your approximate budget?",
+          sub: "Choose one, or skip if you're still exploring.",
+          options: [
+            {
+              value: "under500",
+              title: "Under $500",
+              desc: "Starter kits and individual units",
+            },
+            {
+              value: "500to2000",
+              title: "$500 – $2,000",
+              desc: "Small group or partial class sets",
+            },
+            {
+              value: "2000to10000",
+              title: "$2,000 – $10,000",
+              desc: "Full classroom solutions",
+            },
+            {
+              value: "flexible",
+              title: "Flexible",
+              desc: "No set budget yet",
+            },
+          ],
+        },
+      ];
+
+      // ─── PRODUCTS ─────────────────────────────────────────────────────────────────
+      const products = [
+        {
+          id: "finch",
+          name: "Finch Robot",
+          brand: "BirdBrain Technologies",
+          brandClass: "brand-birdbrain",
+          tagline:
+            "The coding robot that grows with students - from icon blocks to Python.",
+          link: "https://store.crexo.com/collections/finch-robot",
+          grades: ["K2", "35", "68", "912"],
+          goals: ["coding", "robotics"],
+          prioritySignals: [
+            "coding_focus",
+            "device_compat",
+            "beginner",
+            "scalable",
+            "cross_curricular",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Finch Robot 2.0",
+              price: "$180",
+              students: "2 students",
+              link: "https://store.crexo.com/collections/finch-robot/products/finch2",
+              sku: "80220001",
+            },
+            {
+              name: "Starter Flock",
+              price: "$950",
+              students: "10 students",
+              link: "https://store.crexo.com/collections/finch-robot/products/finch-robot-classroom-flock",
+              sku: "80220002",
+            },
+            {
+              name: "Classroom Solution",
+              price: "$3,150",
+              students: "20 students",
+              link: "https://store.crexo.com/collections/finch-robot/products/finch-solution",
+              sku: "80220024",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "The Finch supports <strong>every grade level</strong> and scales from icon blocks all the way to Python. ";
+            if (prio.includes("device_compat"))
+              r +=
+                "Works with any Chromebook, iPad, or laptop you already have. ";
+            if (prio.includes("beginner"))
+              r += "Free educator resources make it easy to get started. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "hummingbird",
+          name: "Hummingbird",
+          brand: "BirdBrain Technologies",
+          brandClass: "brand-birdbrain",
+          tagline:
+            "Open-ended project robotics with lights, motors, and sensors.",
+          link: "https://store.crexo.com/collections/hummingbird-bit/products",
+          grades: ["35", "68", "912"],
+          goals: ["coding", "robotics", "engineering"],
+          prioritySignals: [
+            "coding_focus",
+            "open_ended",
+            "curriculum",
+            "scalable",
+            "device_compat",
+            "hands_on",
+            "cross_curricular",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Hummingbird Robotics Premium Kit",
+              price: "$230",
+              students: "2–3 students",
+              link: "https://store.crexo.com/collections/hummingbird-bit/products/hummingbird-bit-premium-kit",
+              sku: "80210001",
+            },
+            {
+              name: "Hummingbird Starter Flock",
+              price: "$920",
+              students: "8–12 students",
+              link: "https://store.crexo.com/collections/hummingbird-bit/products/hummingbird-bit-classroom-flock",
+              sku: "80210002",
+            },
+            {
+              name: "Hummingbird Robotics Classroom Solution",
+              price: "$4,730",
+              students: "20–30 students",
+              link: "https://store.crexo.com/collections/hummingbird-bit/products/hummingbird-solution",
+              sku: "80290009",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Hummingbird lets students <strong>build and code anything they imagine</strong> with real motors, sensors, and lights. ";
+            if (prio.includes("curriculum"))
+              r +=
+                "Project Packs include Rover, Animatronic, and Catapult kits with full curriculum. ";
+            if (prio.includes("open_ended"))
+              r += "No fixed end product - students design and invent freely. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "owlet",
+          name: "Owlet Math Tools",
+          brand: "BirdBrain Technologies",
+          brandClass: "brand-owlet",
+          tagline: "Hands-on math manipulatives with digital apps for K–5.",
+          link: "https://store.crexo.com/collections/owlet-math-tools/products/cube",
+          grades: ["K2", "35"],
+          goals: ["math"],
+          prioritySignals: ["beginner", "device_compat"],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Owlet Cube",
+              price: "$100",
+              students: "Per student - place value",
+              link: "https://store.crexo.com/collections/owlet-math-tools/products/cube",
+              sku: "80230001",
+            },
+            {
+              name: "Owlet Glow",
+              price: "$100",
+              students: "Per student - fractions & equations",
+              link: "https://store.crexo.com/collections/owlet-math-tools/products/glow",
+              sku: "80230003",
+            },
+          ],
+          whyFit: (a) => {
+            return "Owlet makes <strong>abstract math concrete</strong> for K–5. Cube teaches place value through stacking; Glow brings fractions and equations to life with an LED display and tactile buttons.";
+          },
+        },
+        {
+          id: "strawbees-steam",
+          name: "Strawbees",
+          brand: "Strawbees",
+          brandClass: "brand-strawbees",
+          tagline:
+            "Screen-free, hands-on building that sparks creativity and collaboration.",
+          link: "https://store.crexo.com/collections/strawbees/products/strawbees-steam-classroom-kit",
+          grades: ["K2", "35", "68"],
+          goals: ["engineering"],
+          prioritySignals: [
+            "screen_free",
+            "open_ended",
+            "beginner",
+            "scalable",
+            "hands_on",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "STEAM Starter Kit",
+              price: "$35",
+              students: "2 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-steam-starter-kit",
+              sku: "80410005",
+            },
+            {
+              name: "Imagination Kit",
+              price: "$110",
+              students: "1–3 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-imagination-kit",
+              sku: "80410007",
+            },
+            {
+              name: "STEAM Classroom Kit",
+              price: "$799",
+              students: "30 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-steam-classroom-kit",
+              sku: "80410006",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Strawbees is <strong>100% screen-free</strong> - colorful building pieces that spark engineering thinking for K–8. ";
+            if (prio.includes("beginner"))
+              r += "No setup required; students jump straight into building. ";
+            if (prio.includes("open_ended"))
+              r += 'Open-ended by design, with no single "correct" solution. ';
+            return r.trim();
+          },
+        },
+        {
+          id: "strawbees-robotics",
+          name: "Strawbees",
+          brand: "Strawbees",
+          brandClass: "brand-strawbees",
+          tagline:
+            "Combine creative building with micro:bit coding for programmable inventions.",
+          link: "https://store.crexo.com/collections/strawbees/products/strawbees-bundle-steam-starter-robotics-copy",
+          grades: ["35", "68"],
+          goals: ["coding", "robotics", "engineering"],
+          prioritySignals: [
+            "coding_focus",
+            "open_ended",
+            "curriculum",
+            "beginner",
+            "hands_on",
+            "cross_curricular",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Robotics Starter Bundle",
+              price: "$129",
+              students: "2 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-steam-starter-robotics-bundle",
+              sku: "80410002",
+            },
+            {
+              name: "Project Pack",
+              price: "$59",
+              students: "2 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-robotic-inventions-for-micro-bit-project-pack",
+              sku: "80410010",
+              supplementary: true,
+            },
+            {
+              name: "Classroom Solution",
+              price: "$2,387",
+              students: "30 students",
+              link: "https://store.crexo.com/collections/strawbees/products/strawbees-bundle-steam-starter-robotics-copy",
+              sku: "80410004",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Combines Strawbees building with <strong>micro:bit coding</strong>, letting students design and program their own inventions. ";
+            if (prio.includes("curriculum"))
+              r +=
+                "Includes structured curriculum that works well for teachers new to STEM. ";
+            if (prio.includes("beginner"))
+              r += "Low barrier to entry with clear step-by-step guides. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "datasnap-impact",
+          name: "DataSnap Impact",
+          brand: "DataSnap",
+          brandClass: "brand-datasnap",
+          tagline:
+            "Reinvent the egg drop with motion sensors, data analysis, and real engineering.",
+          link: "https://store.crexo.com/collections/datasnap/products/datasnap-impact-classroom-solution",
+          grades: ["68", "912"],
+          goals: ["data", "engineering"],
+          prioritySignals: [
+            "real_data",
+            "curriculum",
+            "open_ended",
+            "cross_curricular",
+          ],
+          classSizeSignals: ["medium", "large", "district"],
+          packages: [
+            {
+              name: "Classroom Solution",
+              price: "$1,999",
+              students: "Up to 90 students (groups of 3)",
+              link: "https://store.crexo.com/collections/datasnap/products/datasnap-impact-classroom-solution",
+              sku: "80211004",
+            },
+            {
+              name: "Starter Kit",
+              price: "$899",
+              students: "Up to 15 students (groups of 3)",
+              link: "https://store.crexo.com/collections/datasnap/products/datasnap-impact-starter-pack",
+              sku: "80211001",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "DataSnap Impact reimagines the egg drop with <strong>real motion sensors and data analysis</strong>, making it repeatable and standards-aligned (NGSS, ISTE, ITEEA). ";
+            if (prio.includes("curriculum"))
+              r +=
+                "Includes 6–12 hours of curriculum with slides, student activities, and assessments. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "datasnap-projectiles",
+          name: "DataSnap Projectiles",
+          brand: "DataSnap",
+          brandClass: "brand-datasnap",
+          tagline:
+            "Catapult-powered data analysis: velocity, acceleration, predictive modeling.",
+          link: "https://store.crexo.com/collections/datasnap/products/datasnap-projectile-classroom-solution",
+          grades: ["68", "912"],
+          goals: ["data"],
+          prioritySignals: ["real_data", "curriculum", "cross_curricular"],
+          classSizeSignals: ["medium", "large", "district"],
+          packages: [
+            {
+              name: "Classroom Solution",
+              price: "$2,999",
+              students: "Up to 32 students (groups of 4)",
+              link: "https://store.crexo.com/collections/datasnap/products/datasnap-projectile-classroom-solution",
+              sku: "80211005",
+            },
+            {
+              name: "Starter Pack",
+              price: "$1,099",
+              students: "Up to 8 students (groups of 4)",
+              link: "https://store.crexo.com/collections/datasnap/products/projectiles-starter-pack",
+              sku: "80211002",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Students launch, measure, and analyze while exploring <strong>physics through real sensor data</strong>. ";
+            if (prio.includes("curriculum"))
+              r +=
+                "Includes 6–12 hours of structured lessons; advanced curriculum integrates algebraic math for higher-level classes. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "datasnap-airracer",
+          name: "DataSnap Air Racer",
+          brand: "DataSnap",
+          brandClass: "brand-datasnap",
+          tagline: "Air-powered racing meets force and motion data analysis.",
+          link: "https://store.crexo.com/collections/datasnap/products/datasnap-air-racer-classroom-solution",
+          grades: ["68", "912"],
+          goals: ["data", "engineering"],
+          prioritySignals: [
+            "real_data",
+            "open_ended",
+            "curriculum",
+            "cross_curricular",
+          ],
+          classSizeSignals: ["medium", "large", "district"],
+          packages: [
+            {
+              name: "Classroom Solution",
+              price: "$3,499",
+              students: "Up to 32 students (groups of 4)",
+              link: "https://store.crexo.com/collections/datasnap/products/datasnap-air-racer-classroom-solution",
+              sku: "80211006",
+            },
+            {
+              name: "Starter Kit",
+              price: "$1,299",
+              students: "Up to 8 students (groups of 4)",
+              link: "https://store.crexo.com/collections/datasnap/products/datasnap-air-racer-starter-pack",
+              sku: "80211003",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Students build and race air-powered cars while capturing <strong>real force and motion data</strong> - a safe, reusable alternative to CO₂ kits. ";
+            if (prio.includes("open_ended"))
+              r +=
+                "Cars are fully customizable; students iterate and improve their designs. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "tinkering",
+          name: "Electric Motors Catalyst",
+          brand: "Tinkering Labs",
+          brandClass: "brand-tinkering",
+          tagline:
+            "Real wood, real motors, real engineering. Screen-free invention for grades 3–5.",
+          link: "https://store.crexo.com/collections/tinkering-labs/products/catalyst-class-pack",
+          grades: ["35"],
+          goals: ["engineering"],
+          prioritySignals: [
+            "screen_free",
+            "open_ended",
+            "beginner",
+            "hands_on",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Catalyst Kit",
+              price: "$70",
+              students: "1–2 students",
+              link: "https://store.crexo.com/collections/tinkering-labs/products/catalyst-kit",
+              sku: "80310002",
+            },
+            {
+              name: "Booster Bundle",
+              price: "$145",
+              students: "1–2 students",
+              link: "https://store.crexo.com/collections/tinkering-labs/products/catalyst-booster",
+              sku: "80310914",
+              supplementary: true,
+            },
+            {
+              name: "Class Pack + Cabinet",
+              price: "$999",
+              students: "30 students",
+              link: "https://store.crexo.com/collections/tinkering-labs/products/catalyst-class-pack",
+              sku: "80310009",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "<strong>100% screen-free</strong> using wood, motors, and screws. Upper elementary students build real machines while exploring engineering concepts. ";
+            if (prio.includes("open_ended"))
+              r += "No two builds are the same; invention is the whole point. ";
+            return r.trim();
+          },
+        },
+        {
+          id: "swift",
+          name: "Swift Cardboard Engineering",
+          brand: "Swift",
+          brandClass: "brand-swift",
+          tagline:
+            "Transform your makerspace into a hub of hands-on engineering with precision cardboard construction.",
+          link: "https://store.crexo.com/collections/swift/products/swift-classroom-solution",
+          grades: ["K2", "35", "68", "912"],
+          goals: ["engineering"],
+          prioritySignals: [
+            "screen_free",
+            "open_ended",
+            "beginner",
+            "hands_on",
+          ],
+          classSizeSignals: ["small", "medium", "large", "district"],
+          packages: [
+            {
+              name: "Swift Saw",
+              price: "$249",
+              students: "Up to 8 students (groups)",
+              link: "https://store.crexo.com/collections/swift/products/swift-saw",
+              sku: "80270003",
+            },
+            {
+              name: "Student Kit",
+              price: "$199",
+              students: "2–4 students",
+              link: "https://store.crexo.com/collections/swift/products/swift-student-kit",
+              sku: "80270005",
+            },
+            {
+              name: "Classroom Solution",
+              price: "$4,999",
+              students: "Up to 30 students",
+              link: "https://store.crexo.com/collections/swift/products/swift-classroom-solution",
+              sku: "80270007",
+            },
+          ],
+          whyFit: (a) => {
+            const prio = a.priorities || [];
+            let r =
+              "Swift brings <strong>real cardboard engineering</strong> to any grade with a safe precision cutter and construction kits designed for big ideas. ";
+            if (prio.includes("open_ended"))
+              r +=
+                "Students go beyond scissors and tape to build anything they can imagine. ";
+            if (prio.includes("beginner"))
+              r +=
+                "Designed to be immediately accessible for all ages, with no prior experience needed. ";
+            return r.trim();
+          },
+        },
+      ];
+
+      // ─── SCORING ──────────────────────────────────────────────────────────────────
+      function scoreProducts(a) {
+        const selectedGrades = a.grade || [];
+        const selectedGoals = a.goal || [];
+        const selectedPrios = a.priorities || [];
+        const classSize = a.classSize;
+        const budget = a.budget;
+
+        // Parse a price string like "$3,150" → 3150; returns null if unparseable
+        function parsePrice(str) {
+          const n = parseFloat(str.replace(/[^0-9.]/g, ""));
+          return isNaN(n) ? null : n;
+        }
+        const budgetRanges = {
+          under500: [0, 500],
+          "500to2000": [500, 2000],
+          "2000to10000": [2000, 10000],
+          flexible: [0, Infinity],
+        };
+
+        return products
+          .map((p) => {
+            let score = 0;
+
+            // ── GRADE FIT (0-25 points, penalty for off-grade) ──
+            // High impact: teaching the wrong grade is a fundamental mismatch
+            const gradeOverlap = p.grades.filter((g) =>
+              selectedGrades.includes(g),
+            );
+            if (gradeOverlap.length > 0) {
+              score += 12; // Base points for any overlap
+              const coverageRatio = gradeOverlap.length / selectedGrades.length;
+              score += coverageRatio * 13; // Up to 13 more for full coverage
+            } else if (selectedGrades.length > 0) {
+              // No direct overlap - grade ranges are fuzzy in practice, so nearby
+              // grades still get meaningful credit rather than a harsh cutoff.
+              const gradeOrder = ["K2", "35", "68", "912"];
+              const productGradeIndices = p.grades.map((g) =>
+                gradeOrder.indexOf(g),
+              );
+              const selectedGradeIndices = selectedGrades.map((g) =>
+                gradeOrder.indexOf(g),
+              );
+              const minDistance = Math.min(
+                ...productGradeIndices.flatMap((pi) =>
+                  selectedGradeIndices.map((si) => Math.abs(pi - si)),
+                ),
+              );
+              if (minDistance === 1)
+                score += 7; // One band away - quite plausible
+              else if (minDistance === 2) score += 3; // Two bands away - still possible
+              // distance 3 (K2 vs 912) gets nothing - truly opposite ends
+            }
+
+            // ── GOAL ALIGNMENT - highest impact question ──
+            // Goal determines the fundamental category of product needed.
+            // A product with no goal match gets a heavy multiplier penalty so it
+            // can't be rescued by good scores on secondary criteria.
+            const goalOverlap = p.goals.filter((g) =>
+              selectedGoals.includes(g),
+            );
+            let goalMultiplier = 1.0;
+
+            if (goalOverlap.length > 0) {
+              score += 15; // Strong base for any goal match
+              score += goalOverlap.length * 12; // 12 per matching goal
+              if (
+                selectedGoals.length > 1 &&
+                goalOverlap.length === selectedGoals.length
+              ) {
+                score += 8; // Bonus for matching ALL selected goals
+              }
+            } else {
+              // No goal overlap - apply a multiplier that suppresses the whole score
+              const relatedGoals = {
+                coding: ["robotics", "engineering"],
+                robotics: ["coding", "engineering"],
+                engineering: ["coding", "robotics", "data"],
+                data: ["engineering"],
+                math: [],
+              };
+              const hasRelated = p.goals.some((pg) =>
+                selectedGoals.some(
+                  (sg) => relatedGoals[sg] && relatedGoals[sg].includes(pg),
+                ),
+              );
+              goalMultiplier = hasRelated ? 0.45 : 0.25;
+            }
+
+            // ── PRIORITY MATCHING (refinement within category) ──
+            const priorityMatches = p.prioritySignals.filter((ps) =>
+              selectedPrios.includes(ps),
+            );
+            score += priorityMatches.length * 4;
+
+            // screen_free is exclusionary: strongly penalize coding products
+            if (selectedPrios.includes("screen_free")) {
+              if (p.prioritySignals.includes("screen_free")) {
+                score += 10; // Strong reward
+              } else if (p.prioritySignals.includes("coding_focus")) {
+                score -= 15; // Heavy penalty - screen-free and coding don't mix
+              }
+            }
+
+            if (selectedPrios.includes("coding_focus")) {
+              if (p.prioritySignals.includes("coding_focus")) {
+                score += 8;
+              }
+            }
+
+            // real_data is highly specialized - non-data products shouldn't compete
+            if (selectedPrios.includes("real_data")) {
+              if (p.prioritySignals.includes("real_data")) {
+                score += 10;
+              } else {
+                score -= 5; // Penalize products that can't deliver real data
+              }
+            }
+
+            // cross_curricular rewards products that span multiple disciplines
+            if (selectedPrios.includes("cross_curricular")) {
+              if (p.prioritySignals.includes("cross_curricular")) {
+                score += 10;
+              }
+              if (p.goals.length >= 2) score += 4;
+              if (p.grades.length >= 3) score += 3;
+            }
+
+            // ── CLASS SIZE APPROPRIATENESS (0-8 points) ──
+            // Low impact: affects package choice more than product fit
+            if (classSize && p.classSizeSignals.includes(classSize)) {
+              score += 8;
+            } else if (classSize) {
+              const sizeOrder = ["small", "medium", "large", "district"];
+              const productSizes = p.classSizeSignals.map((s) =>
+                sizeOrder.indexOf(s),
+              );
+              const selectedSizeIndex = sizeOrder.indexOf(classSize);
+              const minSizeDist = Math.min(
+                ...productSizes.map((ps) => Math.abs(ps - selectedSizeIndex)),
+              );
+              if (minSizeDist === 1) score += 4;
+              else if (minSizeDist === 2) score += 2;
+            }
+
+            // ── BUDGET FIT (0-10 points, -8 penalty) ──
+            if (budget && budget !== "flexible") {
+              const [lo, hi] = budgetRanges[budget] || [0, Infinity];
+              const hasPackageInRange = p.packages.some((pkg) => {
+                const price = parsePrice(pkg.price);
+                return price !== null && price >= lo && price <= hi;
+              });
+              if (hasPackageInRange) score += 10;
+              else score -= 8; // No package fits budget - product is less relevant
+            }
+
+            // ── VERSATILITY BONUS (small) ──
+            if (p.grades.length >= 3) score += 2;
+            if (p.goals.length >= 2) score += 2;
+
+            // Apply goal multiplier last so it gates the entire score
+            score *= goalMultiplier;
+
+            return { ...p, score };
+          })
+          .sort((a, b) => {
+            // Primary sort by score
+            if (b.score !== a.score) return b.score - a.score;
+            // Tie-breaker: prefer products with more goal matches
+            return b.goals.length - a.goals.length;
+          })
+          .map((product, index, sortedArray) => {
+            // Apply diversity penalty to promote variety in recommendations
+            let diversityScore = product.score;
+
+            // Check products ranked higher
+            for (let i = 0; i < index; i++) {
+              const higherProduct = sortedArray[i];
+
+              // Same brand penalty (reduce score by 15%)
+              if (higherProduct.brand === product.brand) {
+                diversityScore *= 0.85;
+              }
+
+              // Very similar goals penalty (reduce score by 10%)
+              const sharedGoals = product.goals.filter((g) =>
+                higherProduct.goals.includes(g),
+              );
+              if (
+                sharedGoals.length === product.goals.length &&
+                product.goals.length > 1
+              ) {
+                diversityScore *= 0.9;
+              }
+
+              // Same primary focus penalty (reduce score by 8%)
+              const bothScreenFree =
+                product.prioritySignals.includes("screen_free") &&
+                higherProduct.prioritySignals.includes("screen_free");
+              const bothCodingFocus =
+                product.prioritySignals.includes("coding_focus") &&
+                higherProduct.prioritySignals.includes("coding_focus");
+              const bothDataFocus =
+                product.prioritySignals.includes("real_data") &&
+                higherProduct.prioritySignals.includes("real_data");
+
+              if (bothScreenFree || bothCodingFocus || bothDataFocus) {
+                diversityScore *= 0.92;
+              }
+            }
+
+            return {
+              ...product,
+              originalScore: product.score,
+              score: diversityScore,
+            };
+          })
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 3);
+      }
+
+      // ─── PACKAGE SELECTION ────────────────────────────────────────────────────────
+      function bestPackage(product, answers) {
+        const budget = answers.budget;
+        const classSize = answers.classSize;
+        const budgetRanges = {
+          under500: [0, 500],
+          "500to2000": [500, 2000],
+          "2000to10000": [2000, 10000],
+          flexible: [0, Infinity],
+        };
+        function parsePrice(str) {
+          const n = parseFloat(str.replace(/[^0-9.]/g, ""));
+          return isNaN(n) ? null : n;
+        }
+        const classSizeScale = { small: 0, medium: 0.33, large: 0.67, district: 1 };
+        const total = product.packages.length;
+
+        const scored = product.packages.map((pkg, index) => {
+          let score = 0;
+          const price = parsePrice(pkg.price);
+          // 0 = smallest package, 1 = largest package
+          const pkgScale = total > 1 ? index / (total - 1) : 0.5;
+
+          // Supplementary items (add-ons, expansion packs) should never be featured
+          if (pkg.supplementary) score -= 80;
+
+          if (budget === "flexible") {
+            // No budget constraint — prefer the most comprehensive package
+            score += pkgScale * 40;
+          } else if (budget && price !== null) {
+            const [lo, hi] = budgetRanges[budget] || [0, Infinity];
+            if (price >= lo && price <= hi) score += 50;
+            else if (price < lo) score += 15;
+            else score -= Math.min(40, ((price - hi) / hi) * 30);
+          }
+
+          if (classSize && classSizeScale[classSize] !== undefined) {
+            const dist = Math.abs(pkgScale - classSizeScale[classSize]);
+            score += (1 - dist) * 30;
+          }
+
+          return { score, index };
+        });
+
+        return scored.sort((a, b) => b.score - a.score)[0].index;
+      }
+
+      // ─── STATE ────────────────────────────────────────────────────────────────────
+      let currentStep = 0;
+      let answers = {};
+
+      function getSelected(q) {
+        const val = answers[q.id];
+        if (q.multi) return Array.isArray(val) ? val : val ? [val] : [];
+        return val ? [val] : [];
+      }
+
+      // ─── RENDER ───────────────────────────────────────────────────────────────────
+      function renderStart() {
+        document.getElementById("progressWrap").style.display = "none";
+        document.getElementById("mainContent").innerHTML = `
+    <div class="question-card" style="text-align:center;padding:48px 36px;">
+      <h2 style="font-family:'Nunito',sans-serif;font-weight:900;font-size:26px;color:var(--navy);margin-bottom:12px;">CreXo Product Finder</h2>
+      <p style="color:var(--gray);font-size:15px;line-height:1.6;max-width:420px;margin:0 auto 28px;">Find the best CreXo products for your classroom by answering a few quick questions.</p>
+      <button class="btn-next" style="margin:0 auto" onclick="startQuiz()">Get Started</button>
+    </div>
+  `;
+      }
+
+      function startQuiz() {
+        currentStep = 0;
+        answers = {};
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        const q = questions[currentStep];
+        const total = questions.length;
+
+        document.getElementById("progressWrap").style.display = "flex";
+        document.getElementById("progressFill").style.width =
+          Math.round((currentStep / total) * 100) + "%";
+        document.getElementById("progressSteps").textContent =
+          `${currentStep + 1} of ${total}`;
+
+        const selectedArr = getSelected(q);
+        const gridCols =
+          q.options.length === 3 || q.options.length > 4 ? " single-col" : "";
+        // For the priorities question (8 options) use 2-col grid with single-col on mobile via CSS
+        const priGrid = q.id === "priorities" ? "" : gridCols;
+        const selectType = q.multi ? "" : " single-select";
+        const gridClass = `options${priGrid}${selectType}`;
+
+        document.getElementById("mainContent").innerHTML = `
+    <div class="question-card">
+      <div class="question-step">${q.step}</div>
+      <div class="question-text">${q.text}</div>
+      <div class="question-sub">${q.sub}</div>
+      ${q.multi ? '<div class="multi-hint">Select all that apply</div>' : ""}
+      <div class="${gridClass}" id="optionsGrid">
+        ${q.options
+          .map(
+            (o) => `
+          <button class="option-btn${selectedArr.includes(o.value) ? " selected" : ""}"
+                  data-value="${o.value}"
+                  onclick="selectOption('${o.value}', ${q.multi})">
+            <div class="option-title">${o.title}</div>
+            <div class="option-desc">${o.desc}</div>
+          </button>
+        `,
+          )
+          .join("")}
+      </div>
+      <div class="nav-row">
+        <button class="btn-back" onclick="goBack()" ${currentStep === 0 ? "disabled" : ""}>Back</button>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="btn-back" onclick="skipQuestion()" style="color:var(--gray);font-size:13px;">Skip</button>
+          <button class="btn-next" id="nextBtn" onclick="goNext()" ${selectedArr.length > 0 ? "" : "disabled"}>
+            ${currentStep === questions.length - 1 ? "See My Matches" : "Next"}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+      }
+
+      function selectOption(value, isMulti) {
+        const q = questions[currentStep];
+        if (isMulti) {
+          let arr = getSelected(q);
+          answers[q.id] = arr.includes(value)
+            ? arr.filter((v) => v !== value)
+            : [...arr, value];
+        } else {
+          answers[q.id] = value;
+        }
+        const sel = getSelected(q);
+        document.querySelectorAll(".option-btn").forEach((btn) => {
+          btn.classList.toggle("selected", sel.includes(btn.dataset.value));
+        });
+        document.getElementById("nextBtn").disabled = sel.length === 0;
+      }
+
+      function goNext() {
+        if (currentStep < questions.length - 1) {
+          currentStep++;
+          renderQuestion();
+        } else renderResults();
+      }
+
+      function skipQuestion() {
+        const q = questions[currentStep];
+        delete answers[q.id];
+        if (currentStep < questions.length - 1) {
+          currentStep++;
+          renderQuestion();
+        } else renderResults();
+      }
+
+      function goBack() {
+        if (currentStep > 0) {
+          currentStep--;
+          renderQuestion();
+        }
+      }
+
+      function renderResults() {
+        document.getElementById("progressFill").style.width = "100%";
+        document.getElementById("progressSteps").textContent = "Done!";
+
+        const matches = scoreProducts(answers);
+
+        const gradeLabels = { K2: "K–2", 35: "3–5", 68: "6–8", 912: "9–12" };
+        const goalLabels = {
+          coding: "Coding & Programming",
+          robotics: "Robotics",
+          engineering: "Engineering",
+          data: "Data Analysis",
+          math: "Math",
+        };
+        const grades = (answers.grade || [])
+          .map((g) => gradeLabels[g])
+          .join(", ");
+        const goals = (answers.goal || []).map((g) => goalLabels[g]).join(", ");
+        const summary = [grades && `Grades: ${grades}`, goals]
+          .filter(Boolean)
+          .join(" &nbsp;·&nbsp; ");
+
+        // Determine match quality based on top score (use original score before diversity penalty)
+        const topScore =
+          matches.length > 0 ? matches[0].originalScore || matches[0].score : 0;
+        let resultsTitle = "Your Personalized Recommendations";
+        if (topScore >= 55) {
+          resultsTitle = `We Found ${matches.length} Great Fit${matches.length !== 1 ? "s" : ""}`;
+        } else if (topScore >= 35) {
+          resultsTitle = `We Found ${matches.length} Good Match${matches.length !== 1 ? "es" : ""}`;
+        } else if (topScore >= 20) {
+          resultsTitle = `Here Are ${matches.length} Option${matches.length !== 1 ? "s" : ""} Worth Considering`;
+        }
+
+        document.getElementById("mainContent").innerHTML = `
+    <div class="results-header">
+      <div class="results-badge">Your Results</div>
+      <h2>${resultsTitle}</h2>
+      ${summary ? `<p>${summary}</p>` : ""}
+    </div>
+
+    ${matches.map((p, i) => renderResultCard(p, i === 0 && topScore >= 40)).join("")}
+
+    <div class="restart-wrap">
+      <button class="btn-restart" onclick="renderStart()">Start Over</button>
+    </div>
+
+    ${renderContactForm()}
+  `;
+      }
+
+      function renderResultCard(p, isTop) {
+        const bestIdx = bestPackage(p, answers);
+        const featured = p.packages[bestIdx];
+        const others = p.packages.filter((_, i) => i !== bestIdx);
+
+        const featuredHtml = featured.link
+          ? `<a href="${featured.link}" target="_blank" class="featured-pkg">
+              <div class="featured-pkg-info">
+                <div class="featured-pkg-name">${featured.name}</div>
+                <div class="featured-pkg-students">${featured.students}</div>
+                ${featured.sku ? `<div class="featured-pkg-sku">SKU: ${featured.sku}</div>` : ""}
+              </div>
+              <div class="featured-pkg-right">
+                <div class="featured-pkg-price">${featured.price}</div>
+                <div class="featured-pkg-cta">Shop Now →</div>
+              </div>
+            </a>`
+          : `<div class="featured-pkg">
+              <div class="featured-pkg-info">
+                <div class="featured-pkg-name">${featured.name}</div>
+                <div class="featured-pkg-students">${featured.students}</div>
+                ${featured.sku ? `<div class="featured-pkg-sku">SKU: ${featured.sku}</div>` : ""}
+              </div>
+              <div class="featured-pkg-right">
+                <div class="featured-pkg-price">${featured.price}</div>
+              </div>
+            </div>`;
+
+        const othersHtml =
+          others.length > 0
+            ? `<div class="other-pkgs-label">Other options</div>
+               <div class="other-pkgs">
+                 ${others.map((pkg) =>
+                   pkg.link
+                     ? `<a href="${pkg.link}" target="_blank" class="other-pkg-item">
+                         <span class="other-pkg-name">${pkg.name}</span>
+                         <span class="other-pkg-price">${pkg.price}</span>
+                         <span class="other-pkg-students">${pkg.students}</span>
+                         ${pkg.sku ? `<span class="other-pkg-sku">SKU ${pkg.sku}</span>` : ""}
+                       </a>`
+                     : `<div class="other-pkg-item">
+                         <span class="other-pkg-name">${pkg.name}</span>
+                         <span class="other-pkg-price">${pkg.price}</span>
+                         <span class="other-pkg-students">${pkg.students}</span>
+                         ${pkg.sku ? `<span class="other-pkg-sku">SKU ${pkg.sku}</span>` : ""}
+                       </div>`
+                 ).join("")}
+               </div>`
+            : "";
+
+        return `
+    <div class="result-card${isTop ? " top-pick" : ""}">
+      <div class="result-img-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+        <span>Product Photo</span>
+      </div>
+      <div class="result-card-header">
+        <div class="result-logo-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <rect x="4" y="4" width="16" height="16" rx="3"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div class="result-header-text">
+          <div class="result-brand ${p.brandClass}">${p.brand}</div>
+          <div class="result-name">${p.name}</div>
+          <div class="result-tagline">${p.tagline}</div>
+        </div>
+        ${isTop ? '<div class="top-pick-badge">Top Pick</div>' : ""}
+      </div>
+      <div class="result-card-body">
+        <div class="result-why">${p.whyFit(answers)}</div>
+        <div class="featured-pkg-label">Best match for you</div>
+        ${featuredHtml}
+        ${othersHtml}
+      </div>
+      <div class="result-card-footer">
+        <a href="${p.link || "https://www.crexo.com"}" target="_blank" class="cta-link">Learn More</a>
+        <a href="https://www.crexo.com" target="_blank" class="cta-link cta-quote">Request a Quote</a>
+      </div>
+    </div>
+  `;
+      }
+
+      // ─── CONTACT FORM ─────────────────────────────────────────────────────────────
+      const US_STATES = [
+        "Alabama",
+        "Alaska",
+        "Arizona",
+        "Arkansas",
+        "California",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Iowa",
+        "Kansas",
+        "Kentucky",
+        "Louisiana",
+        "Maine",
+        "Maryland",
+        "Massachusetts",
+        "Michigan",
+        "Minnesota",
+        "Mississippi",
+        "Missouri",
+        "Montana",
+        "Nebraska",
+        "Nevada",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "New York",
+        "North Carolina",
+        "North Dakota",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "South Dakota",
+        "Tennessee",
+        "Texas",
+        "Utah",
+        "Vermont",
+        "Virginia",
+        "Washington",
+        "West Virginia",
+        "Wisconsin",
+        "Wyoming",
+        "Washington D.C.",
+      ];
+
+      function renderContactForm() {
+        return `
+    <div class="contact-card" id="contactCard">
+      <h3>Want a member of our team to reach out?</h3>
+      <p>Have questions about these products or need help choosing the right solution for your school or district? Fill out the form below and we'll be in touch.</p>
+      <div id="contactFormInner">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf_first">First Name</label>
+            <input type="text" id="cf_first" placeholder="Jane" />
+          </div>
+          <div class="form-group">
+            <label for="cf_last">Last Name</label>
+            <input type="text" id="cf_last" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf_email">Email Address</label>
+            <input type="email" id="cf_email" placeholder="jane@school.edu" />
+          </div>
+          <div class="form-group">
+            <label for="cf_phone">Phone (optional)</label>
+            <input type="tel" id="cf_phone" placeholder="(555) 000-0000" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf_school">School or District</label>
+            <input type="text" id="cf_school" placeholder="Lincoln Elementary" />
+          </div>
+          <div class="form-group">
+            <label for="cf_state">State</label>
+            <select id="cf_state">
+              <option value="">Select a state...</option>
+              ${US_STATES.map((s) => `<option value="${s}">${s}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <div class="form-row full">
+          <div class="form-group">
+            <label for="cf_message">Message (optional)</label>
+            <textarea id="cf_message" placeholder="Any questions, or tell us more about what you're looking for..."></textarea>
+          </div>
+        </div>
+        <div id="cf_error" style="color:#c0392b;font-size:13px;font-weight:700;margin-bottom:8px;display:none;"></div>
+        <button class="btn-submit" onclick="submitForm()">Send Message</button>
+      </div>
+    </div>
+  `;
+      }
+
+      function submitForm() {
+        const first = document.getElementById("cf_first").value.trim();
+        const last = document.getElementById("cf_last").value.trim();
+        const email = document.getElementById("cf_email").value.trim();
+        const school = document.getElementById("cf_school").value.trim();
+        const state = document.getElementById("cf_state").value;
+        const err = document.getElementById("cf_error");
+
+        if (!first || !last || !email || !school || !state) {
+          err.textContent =
+            "Please fill in all required fields (First Name, Last Name, Email, School, and State).";
+          err.style.display = "block";
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          err.textContent = "Please enter a valid email address.";
+          err.style.display = "block";
+          return;
+        }
+
+        err.style.display = "none";
+        document.getElementById("contactFormInner").innerHTML = `
+    <div class="form-success">
+      <h4>Message Sent!</h4>
+      <p>Thanks, ${first}! A member of our team will be in touch with you soon.</p>
+    </div>
+  `;
+      }
+
+      // ─── INIT ─────────────────────────────────────────────────────────────────────
+      renderStart();
+    </script>
+  </body>
+</html>
